@@ -3,26 +3,26 @@ An interactive Power BI dashboard designed to provide actionable business insigh
 🌟 Key Features
 Multi-Page Navigation: Structured reporting environment with distinct pages and view states tailored for varied analytical scopes [cite: 1].
 
-Custom Theming: Utilizes the Fluent2-CY26SU08 and CopilotDefault JSON themes to maintain a modern, cohesive, and accessible user interface [cite: 1].
+Custom Theming: Utilizes the Fluent2-CY26SU08 and CopilotDefault JSON themes to maintain a modern, cohesive, and accessible user interface 
 
-State Management: Integrated bookmarking system for saving specific filter states, toggling visual visibility, and creating guided analytical narratives [cite: 1].
+State Management: Integrated bookmarking system for saving specific filter states, toggling visual visibility, and creating guided analytical narratives 
 
-Rich Visualizations: Employs a variety of dynamic visuals mapped to a structured relational data model and custom metadata [cite: 1].
+Rich Visualizations: Employs a variety of dynamic visuals mapped to a structured relational data model and custom metadata .
 
 📂 Repository Structure
 This project is version-controlled by exposing the underlying Power BI archive structure:
 
-/Report/StaticResources/ - Contains embedded media and shared theme JSON files [cite: 1].
+/Report/StaticResources/ - Contains embedded media and shared theme JSON files.
 
-/Report/definition/pages/ - Stores the JSON definitions for individual report pages and their corresponding visual configurations [cite: 1].
+/Report/definition/pages/ - Stores the JSON definitions for individual report pages and their corresponding visual configurations 
 
-/DataModel/ - Houses the schema, table relationships, and metadata for the underlying datasets [cite: 1].
+/DataModel/ - Houses the schema, table relationships, and metadata for the underlying datasets .
 
-/SecurityBindings/ - Contains the security definitions and potential Role-Level Security (RLS) configurations [cite: 1].
+/SecurityBindings/ - Contains the security definitions and potential Role-Level Security (RLS) configurations.
 
 🚀 Getting Started
 Prerequisites
-Power BI Desktop (Latest Version)
+Power BI Desktop
 
 Necessary credentials or gateway access to authenticate the underlying data sources.
 
