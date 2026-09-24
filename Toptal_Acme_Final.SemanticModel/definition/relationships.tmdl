@@ -1,0 +1,14 @@
+relationship 5ffb1d9b-d044-4ec5-94e5-9ee7b58e3bd4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: '500000 Sales Records'.'Ship Date'
+	toColumn: LocalDateTable_def1c7d9-ea30-4d3b-8348-f9f378bd6353.Date
+
+relationship d0af2a4c-156a-5955-2524-ceeebf8ff8a7
+	fromColumn: '500000 Sales Records'.'Order Date'
+	toColumn: Date_Order_date_Full.Date
+
+relationship bca25e02-397b-4ab3-b731-85b0705e7119
+	joinOnDateBehavior: datePartOnly
+	fromColumn: '500000 Sales Records'.End_of_Month_Order_Date
+	toColumn: LocalDateTable_0e51640a-cf86-493c-9d91-6f6fab3e46e3.Date
+

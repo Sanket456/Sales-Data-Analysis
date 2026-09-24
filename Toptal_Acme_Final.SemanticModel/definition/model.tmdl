@@ -1,0 +1,23 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["500000 Sales Records"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table '500000 Sales Records'
+ref table DateTableTemplate_4a53cc39-b54a-4dff-914a-ecffc2909150
+ref table LocalDateTable_def1c7d9-ea30-4d3b-8348-f9f378bd6353
+ref table Date_Order_date_Full
+ref table LocalDateTable_0e51640a-cf86-493c-9d91-6f6fab3e46e3
+
+ref cultureInfo en-US
+

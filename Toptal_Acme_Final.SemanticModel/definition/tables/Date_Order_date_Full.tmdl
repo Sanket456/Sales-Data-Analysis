@@ -1,0 +1,102 @@
+table Date_Order_date_Full
+	lineageTag: 4d382d78-e70f-4a5f-b6f9-137a15bee2be
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: 42b283c2-4e24-48c8-a354-40ef2fd117c2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: c192bfbd-af6b-4014-8438-fabe4528715f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: 6c72bacb-1fb2-4f7a-91b1-f21e60c606ec
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Name'
+		lineageTag: 64168e4f-269d-46a5-bbb7-3972ffc338d7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: aed40052-cf73-4fdc-96b7-31a733fb21ae
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Month
+		lineageTag: 92cafb3e-0134-40fa-9ec1-a282fa6208dd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year-Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Quarter
+		lineageTag: 0ff947b2-43f7-43b0-8c62-f443c91db8f2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year-Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Last 4 Quarters' = VAR MaxDate = CALCULATE(MAX('500000 Sales Records'[Order Date]), ALL('500000 Sales Records')) VAR MaxQuarterStart = DATE(YEAR(MaxDate), (ROUNDUP(MONTH(MaxDate)/3,0)-1)*3+1, 1) VAR CutoffDate = EDATE(MaxQuarterStart, -9) RETURN IF('Date_Order_date_Full'[Date] >= CutoffDate, 1, 0)
+		formatString: 0
+		lineageTag: 625fcb33-ec42-488d-9648-ee908873cf1f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Last 5 Years' = ```
+			
+			VAR MaxYr = CALCULATE(YEAR(MAX('500000 Sales Records'[Order Date])), ALL('500000 Sales Records'))
+			RETURN 
+			IF('Date_Order_date_Full'[Year] >= MaxYr - 4 && 'Date_Order_date_Full'[Year] <= MaxYr, 1, 0)
+			```
+		formatString: 0
+		lineageTag: d0f98bcf-45a2-4842-b55d-7f568ceabbe8
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date_Order_date_Full = calculated
+		mode: import
+		source =
+				
+				VAR MinYear = YEAR(MIN('500000 Sales Records'[Order Date]))
+				VAR MaxYear = YEAR(MAX('500000 Sales Records'[Order Date]))
+				RETURN
+				ADDCOLUMNS(
+				    CALENDAR(DATE(MinYear, 1, 1), DATE(MaxYear, 12, 31)),
+				    "Year", YEAR([Date]),
+				    "Month Number", MONTH([Date]),
+				    "Month Name", FORMAT([Date], "MMMM"),
+				    "Quarter", "Q" & FORMAT([Date], "Q"),
+				    "Year-Month", FORMAT([Date], "MMM YYYY"),
+				    "Year-Quarter", FORMAT([Date], "YYYY") & " Q" & FORMAT([Date], "Q")
+				)
+
+	annotation PBI_Id = 3b93b0477476414cb7daeab6216b4287
+

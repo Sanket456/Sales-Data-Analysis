@@ -1,0 +1,314 @@
+table '500000 Sales Records'
+	lineageTag: 635f71b4-c4a9-4644-97bb-cb9370dee6fe
+
+	measure 'Barchart Title' = ```
+			
+			IF(
+			    ISFILTERED('500000 Sales Records'[Region]),
+			    "Total Sales Order by Country",
+			    "Total Sales Order by Region"
+			    
+			)
+			```
+		lineageTag: ef47d990-019a-4373-8c7f-6be5b7383cf5
+
+	measure 'Count of Order' = COUNTROWS('500000 Sales Records')
+		formatString: 0
+		lineageTag: 3b4096ab-64f6-4416-921b-57ecb8d01389
+
+	measure Country_Rank = RANKX(ALL('500000 Sales Records'[Country]),CALCULATE(SUM('500000 Sales Records'[Total Revenue])),,DESC)
+		formatString: 0
+		lineageTag: d465a944-50f4-4074-bb10-efffc76e3b74
+
+	measure Number_of_sales = COUNTROWS('500000 Sales Records')
+		formatString: 0
+		lineageTag: e8df1877-4ca7-4750-ac24-ecbcab049262
+
+	measure Total_Profit = SUM('500000 Sales Records'[Total Profit])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b246fe52-653c-4be1-8965-38d621167150
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure Total_Revenue = ```
+			Sum('500000 Sales Records'[Total Revenue]) 
+			```
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 950ee7be-2175-4ac7-aae6-e8ef22603014
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure Total_Unit_Sold = ```
+			SUM('500000 Sales Records'[Units Sold]) 
+			```
+		formatString: 0
+		lineageTag: ff62e187-6092-4585-b906-0c3592dce4a4
+
+	measure 'Treemap Title' = ```
+			
+			IF(
+			    ISFILTERED('500000 Sales Records'[Region]),
+			    "Total Revenue by Country",
+			    "Total Revenue by Region"
+			    
+			)
+			```
+		lineageTag: ba0f73c6-110e-44fe-846a-44fc9fa75dae
+
+	measure 'Profit Same Qtr LY' =
+			
+			CALCULATE(
+			    [Total_Profit],
+			    SAMEPERIODLASTYEAR('Date_Order_date_Full'[Date])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 1b498e71-7cb8-4388-ab25-4eef78f3f91e
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Profit Title' = ```
+			
+			IF(
+			    ISFILTERED('500000 Sales Records'[Region]),
+			    "Total Profit by Country",
+			    "Total Profit by Region"
+			    
+			)
+			```
+		lineageTag: 80381133-7d25-4936-b6f0-0d721bc05ff2
+
+	measure 'Revenue Same Qtr LY' = CALCULATE([Total_Revenue], SAMEPERIODLASTYEAR('Date_Order_date_Full'[Date]))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: eb2f227c-439c-48e2-a46e-3d0435cdb30c
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Revenue YoY %' = DIVIDE([Total_Revenue] - [Revenue Same Qtr LY], [Revenue Same Qtr LY])
+		lineageTag: b9184deb-e6eb-426d-9166-0d5c708ff9af
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Duration' = AVERAGE('500000 Sales Records'[Duration_Days])
+		lineageTag: 7bdc3095-8fca-482f-8261-ba87b5e63e8c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Duration PY' =
+			
+			CALCULATE(
+			    [Avg Duration],
+			    DATEADD('Date_Order_date_Full'[Date], -1, YEAR)
+			)
+		lineageTag: d728bb70-9d1a-4ba3-b2df-5ab4ea1a9f84
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Duration YoY %' = DIVIDE([Avg Duration] - [Avg Duration PY], [Avg Duration PY])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e4f4240b-6f1c-4c85-80c1-a0491429caea
+
+	measure 'Previous Year Orders' = ```
+			
+			CALCULATE(
+			    [Count of Order], 
+			    DATEADD(Date_Order_date_Full[Date], -1, YEAR)
+			)
+			```
+		formatString: 0
+		lineageTag: b6624c6e-a20f-43dd-8c06-49446e029609
+
+	measure 'Orders YoY Increase %' = ```
+			
+			VAR CurrentYear = MAX(Date_Order_date_Full[Year])
+			VAR CurrentOrders = [Count of Order]
+			VAR PrevYearOrders = 
+			    CALCULATE(
+			        [Count of Order],
+			        ALL(Date_Order_date_Full[Year]),
+			        Date_Order_date_Full[Year] = CurrentYear - 1
+			    )
+			RETURN 
+			    DIVIDE(CurrentOrders - PrevYearOrders, PrevYearOrders)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 1258a0ce-c11f-460f-91aa-9f339606f811
+
+	column Region
+		dataType: string
+		lineageTag: 6a54c86b-5a66-4fe7-b293-cfffcb31aae6
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: 2ede88b8-6a70-43c7-bdab-db8a60bf097d
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Item Type'
+		dataType: string
+		lineageTag: 45c3d63d-b306-4968-8393-4e19c26f0dab
+		summarizeBy: none
+		sourceColumn: Item Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Sales Channel'
+		dataType: string
+		lineageTag: 8781a9f2-0550-4270-aec7-f9e1b627026f
+		summarizeBy: none
+		sourceColumn: Sales Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Priority'
+		dataType: string
+		lineageTag: 305c567b-71f2-4fde-be5d-97225345102c
+		summarizeBy: none
+		sourceColumn: Order Priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8437eb10-a27c-4d5a-b5f6-1b3f870931f0
+		summarizeBy: none
+		sourceColumn: Order Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Order ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: cc293fde-8d45-4687-8671-910c061166a2
+		summarizeBy: none
+		sourceColumn: Order ID
+
+		annotation SummarizationSetBy = User
+
+	column 'Ship Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a90b91a7-facd-4aa0-bdbd-54d8312e77e2
+		summarizeBy: none
+		sourceColumn: Ship Date
+
+		variation Variation
+			isDefault
+			relationship: 5ffb1d9b-d044-4ec5-94e5-9ee7b58e3bd4
+			defaultHierarchy: LocalDateTable_def1c7d9-ea30-4d3b-8348-f9f378bd6353.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Units Sold'
+		dataType: int64
+		formatString: 0
+		lineageTag: fe994320-175b-415d-86f8-319345c65969
+		summarizeBy: sum
+		sourceColumn: Units Sold
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Unit Price'
+		dataType: double
+		lineageTag: d6cb8504-2b1a-4fc2-968e-f40e24efe4fc
+		summarizeBy: sum
+		sourceColumn: Unit Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Unit Cost'
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: a58222d0-3f38-409b-aebc-4a79e45229da
+		summarizeBy: sum
+		sourceColumn: Unit Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Total Revenue'
+		dataType: double
+		lineageTag: 85a9c85f-d7e2-4bbb-a55f-bf30a3533cdd
+		summarizeBy: sum
+		sourceColumn: Total Revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Cost'
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 73e5495a-2c63-4a9c-a37d-4526906db517
+		summarizeBy: sum
+		sourceColumn: Total Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column 'Total Profit'
+		dataType: double
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 6982261b-e6cc-4426-9e2c-094a7c4df088
+		summarizeBy: sum
+		sourceColumn: Total Profit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column Duration_Days = ```
+			DATEDIFF('500000 Sales Records'[Order Date],'500000 Sales Records'[Ship Date],DAY) 
+			```
+		formatString: 0
+		lineageTag: cf454cf7-d6df-4d8f-9379-c9797916546e
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column End_of_Month_Order_Date = EOMONTH('500000 Sales Records'[Order Date], 0)
+		formatString: General Date
+		lineageTag: aee7bf14-325b-49d9-9ab0-36b61367dc4d
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: bca25e02-397b-4ab3-b731-85b0705e7119
+			defaultHierarchy: LocalDateTable_0e51640a-cf86-493c-9d91-6f6fab3e46e3.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition '500000 Sales Records' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("G:\Target\500000-Sales-Records\500000 Sales Records.csv"),[Delimiter=",", Columns=14, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Region", type text}, {"Country", type text}, {"Item Type", type text}, {"Sales Channel", type text}, {"Order Priority", type text}, {"Order Date", type text}, {"Order ID", Int64.Type}, {"Ship Date", type text}, {"Units Sold", Int64.Type}, {"Unit Price", type number}, {"Unit Cost", type number}, {"Total Revenue", type number}, {"Total Cost", type number}, {"Total Profit", type number}}),
+				    #"Changed Type with Locale" = Table.TransformColumnTypes(#"Changed Type", {{"Order Date", type date}}, "en-US"),
+				    #"Changed Type with Locale1" = Table.TransformColumnTypes(#"Changed Type with Locale", {{"Ship Date", type date}}, "en-US"),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type with Locale1","M","Medium ",Replacer.ReplaceText,{"Order Priority"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","H","High ",Replacer.ReplaceText,{"Order Priority"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","L","Low",Replacer.ReplaceText,{"Order Priority"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","C","Critical",Replacer.ReplaceText,{"Order Priority"})
+				in
+				    #"Replaced Value3"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

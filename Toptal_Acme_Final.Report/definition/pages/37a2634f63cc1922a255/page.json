@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "37a2634f63cc1922a255",
+  "displayName": "Order Fulfillment Trends",
+  "displayOption": "FitToPage",
+  "height": 1080,
+  "width": 1920,
+  "pageBinding": {
+    "name": "e733852ed8a4a80ec0e2",
+    "type": "Default",
+    "parameters": []
+  }
+}

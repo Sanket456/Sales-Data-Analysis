@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Toptal_Acme_Final"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5869dd16-c6ae-4cf6-a41c-102b4952c679"
+  }
+}
